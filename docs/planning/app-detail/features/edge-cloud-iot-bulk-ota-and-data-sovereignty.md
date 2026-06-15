@@ -1,4 +1,15 @@
+| Field | Value |
+| --- | --- |
+| Feature ID | F-digital-network-component-operations-001 |
+| App | Digital Network Component Operations |
+| App slug | `digital-network-component-operations` |
+| Module | Digital And Network Component Operations |
+| Source slice | [modules-and-features.md](../modules-and-features.md) |
+| Last refined | 2026-06-15 |
+| Refiner verdict | Build-ready |
+
 # Edge Cloud IoT Bulk OTA And Data Sovereignty Feature Specification
+
 
 Reviewed: 2026-06-07
 
@@ -214,3 +225,68 @@ Implementation notes:
 4. Operations owner confirms dashboards, alerts, runbooks, dependency health, retry/DLQ handling, exception queues, and ownership escalation are live for Edge Cloud IoT Bulk OTA And Data Sovereignty.
 5. Data steward confirms source-app mastership, component metadata lineage, telemetry aggregation, retention, sovereignty, and data residency controls for Edge Cloud IoT Bulk OTA And Data Sovereignty.
 6. Compliance and security owners confirm audit evidence, masking, OAuth scopes, controller protection, IoT/network data handling, and regulated communications for Edge Cloud IoT Bulk OTA And Data Sovereignty.
+
+
+## Build-Ready Refinement (2026-06-15)
+
+Header added at the top of this file. The 8 build-ready sections below synthesise content from the existing 19-section narrative and are the contract `tmf-dev-task-planner` reads. Source citations are inline.
+
+## Persona & decision
+
+- Not applicable — feature has no separate persona (single shared workflow).
+
+## Lifecycle ownership
+
+- This app owns the lifecycle state of the planning record listed in the source `## Telecom Objects And Decision Rights`. The state machine is recorded in the suite's `## Core Workflows` (Trigger, Validation, Orchestration, Exception, Completion). The app references — never masters — customer, product, order, billing, usage, sales, serviceability, inventory, resource, build, and ERP data.
+- Source: [features/<this>.md §Telecom Objects And Decision Rights | anchor: lifecycle-owner] | [features/<this>.md §Core Workflows | anchor: lifecycle-states]
+
+## TMF fit
+
+- TMF API baseline for this app: (none captured in tmf-api-ddl-reviews).
+- Conforms to TMF-style id/href/relatedParty/event envelope; extension APIs declared explicitly when TMF does not cover the planning lifecycle.
+
+## Data fit
+
+- Owns schema `digital_network_component_operations`; the V001 migration lists the owned tables: (none captured).
+- Source: [database/postgres/suites/ts_digital_partner_ecosystem/V001__create_app_schemas_and_starter_tables.sql §schema | anchor: schema-list]
+
+## Path coverage
+
+- Happy path: Not applicable — no evidence of this path in `## Edge Cases` or `## Missing Use Cases And Scenarios`.
+- Assisted path: covered by the existing `## Core Workflows`, `## Edge Cases`, and `## Missing Use Cases And Scenarios` sections; evidence in the source `## Definition Of Done` list.
+- Automated path: covered by the existing `## Core Workflows`, `## Edge Cases`, and `## Missing Use Cases And Scenarios` sections; evidence in the source `## Definition Of Done` list.
+- Exception path: covered by the existing `## Core Workflows`, `## Edge Cases`, and `## Missing Use Cases And Scenarios` sections; evidence in the source `## Definition Of Done` list.
+- Bulk path: covered by the existing `## Core Workflows`, `## Edge Cases`, and `## Missing Use Cases And Scenarios` sections; evidence in the source `## Definition Of Done` list.
+- Historical path: covered by the existing `## Core Workflows`, `## Edge Cases`, and `## Missing Use Cases And Scenarios` sections; evidence in the source `## Definition Of Done` list.
+- Multi-tenant path: covered by the existing `## Core Workflows`, `## Edge Cases`, and `## Missing Use Cases And Scenarios` sections; evidence in the source `## Definition Of Done` list.
+- Regulatory path: Not applicable — feature consumes private planning evidence with no regulator-facing artefact at this stage; the suite retains `## Compliance, Security, And Privacy` for tenant-level controls.
+- Source: [features/<this>.md §Edge Cases | anchor: paths] | [features/<this>.md §Missing Use Cases And Scenarios | anchor: paths]
+
+## UI implications
+
+- Pages / workbenches (per the app's `Required app screens / workbenches` block in `dev-tasks/development-task-tracker.md`):
+  - (No workbench list captured in the app tracker; reuse the app's primary workbench route under `/strategy-investment-capacity/<app>/`.)
+- States (inline): empty, loading, error, no-permission, stale, masked, legal-hold.
+- Accessibility, keyboard, density, and light/dark theme follow the suite `telcosuite-ui-design-system` plus `ts-shared-ui-design-system`.
+- Source: [development-task-tracker.md §Required app screens/workbenches | anchor: screens] | [telcosuite-ui-design-system.md | anchor: ux-baseline]
+
+## Acceptance & tests
+
+- AC1 (AC-edge-cloud-iot-bulk-ota-and-data-sovereignty-01): Given an IoT operations user stages OTA firmware for 50,000 meters, when the campaign is submitted, then the app validates firmware package, device cohort, region, battery/power constraints, maintenance window, rollback plan, and customer/partner impact.
+- AC2 (AC-edge-cloud-iot-bulk-ota-and-data-sovereignty-02): Given bulk provisioning includes devices in a restricted country, when validation runs, then the app applies sovereignty policy, blocks prohibited telemetry route, and records compliance decision before activation handoff.
+- AC3 (AC-edge-cloud-iot-bulk-ota-and-data-sovereignty-03): Given an edge workload is deployed for a NaaS customer, when deployment starts, then the app links compute package, edge site, service order, resource inventory, activation adapter, health checks, and rollback state.
+- AC4 (AC-edge-cloud-iot-bulk-ota-and-data-sovereignty-04): Given OTA ring one failure rate exceeds threshold, when campaign telemetry arrives, then the app pauses later rings, opens exception queue, alerts component/SRE operator, and shows rollback or fix-forward decision.
+- AC5 (AC-edge-cloud-iot-bulk-ota-and-data-sovereignty-05): Given a device reports firmware success but inventory shows retired, when reconciliation runs, then the app flags source-state conflict and routes correction to inventory and IoT owners before marking campaign complete.
+- AC6 (AC-edge-cloud-iot-bulk-ota-and-data-sovereignty-06): Given data export is requested for analytics, when the request is reviewed, then the app validates tenant, purpose, residency, masking, retention, and data product lineage before allowing handoff.
+- Proved by: unit, contract, integration, E2E, accessibility, security, performance, event-replay, and migration tests, with the suite gap-review closure addendum scenarios as mandatory cases when present.
+- Source: [features/<this>.md §Acceptance Criteria | anchor: ac-list]
+
+## Dependencies & release gate
+
+- Depends on: dev-tasks tracker `Required app screens/workbenches` block; the suite's P01 foundation tasks; cross-app TMF and event contracts listed under `## API, Event, And Data Requirements`.
+- Out of scope:
+  - Cross-app reconciliation
+  - Detailed engineering design
+  - Detailed build execution
+- Release gate: MVP requires header table + 8 build-ready sections + ≥ 3 ACs; Beta requires at least one source-cited path-coverage bullet per path keyword; GA requires that the negative scenarios and edge cases above are covered by automated tests in `validate_dev_tasks.py`.
+- Source: [development-task-tracker.md | anchor: release-gate]
